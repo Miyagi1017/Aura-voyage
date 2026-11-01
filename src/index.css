@@ -1,404 +1,101 @@
 @import "tailwindcss";
 
-/* ============================================================
-   Odyssée — Design tokens
-   Palette chaude et éditoriale, pensée pour un confort visuel
-   prolongé (contrastes doux, papiers crème, encre chaude).
-   ============================================================ */
-@theme {
-  --color-paper: #faf7f1;
-  --color-paper-deep: #f4efe5;
-  --color-ink: #1d1b16;
-  --color-ink-soft: #35322b;
-  --color-muted: #79746a;
-  --color-line: #eae4d8;
-  --color-line-strong: #d8d1c2;
-  --color-accent: #b4542f;
-  --color-accent-soft: #fbece4;
-  --color-gold: #c99a4b;
-  --color-gold-soft: #fbf3e2;
-
-  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Newsreader', 'Playfair Display', Georgia, 'Times New Roman', serif;
-
-  --shadow-2xs: 0 1px 2px rgba(45, 40, 32, 0.04);
-  --shadow-xs: 0 1px 3px rgba(45, 40, 32, 0.05), 0 1px 2px rgba(45, 40, 32, 0.03);
-  --shadow-sm: 0 2px 10px rgba(45, 40, 32, 0.05), 0 1px 3px rgba(45, 40, 32, 0.03);
-  --shadow-md: 0 8px 26px rgba(45, 40, 32, 0.07), 0 2px 6px rgba(45, 40, 32, 0.04);
-  --shadow-lg: 0 18px 44px rgba(45, 40, 32, 0.09), 0 4px 12px rgba(45, 40, 32, 0.04);
-  --shadow-xl: 0 30px 70px rgba(45, 40, 32, 0.12), 0 8px 20px rgba(45, 40, 32, 0.05);
-  --shadow-2xl: 0 42px 90px rgba(45, 40, 32, 0.18);
-}
-
 @layer base {
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  html {
-    scroll-behavior: smooth;
+  :root {
+    --font-heading: 'Syne', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: var(--color-paper);
-    color: var(--color-ink);
-    margin: 0;
-    padding: 0;
+    background-color: #F8F6F1;
+    color: #242246;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  .font-serif {
-    font-family: var(--font-serif);
-    letter-spacing: -0.01em;
+  h1, h2, h3, .font-heading {
+    font-family: var(--font-heading);
   }
 
-  ::selection {
-    background: var(--color-ink);
-    color: #fffdf8;
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  button,
-  a,
-  input,
-  select,
-  textarea {
-    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
-    transition-duration: 180ms;
-    transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  .font-mono-numbers {
+    font-family: var(--font-mono);
   }
 }
 
-/* ============================================================
-   Leaflet — carte intégrée
-   ============================================================ */
-.leaflet-container {
-  font-family: var(--font-sans) !important;
-  background-color: #eee9df !important;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  outline: none;
-}
-
-/* Fond de carte légèrement désaturé et réchauffé pour s'accorder au papier crème */
-.leaflet-tile-pane {
-  filter: saturate(0.58) contrast(0.96) brightness(1.04) sepia(0.16);
-}
-
-.leaflet-control-attribution {
-  background: rgba(255, 253, 248, 0.82) !important;
-  color: #8a857a !important;
-  font-size: 9px !important;
-  border-radius: 6px 0 0 0;
-  padding: 1px 6px !important;
-}
-
-.leaflet-control-attribution a {
-  color: #6f6a60 !important;
-}
-
-.leaflet-bar {
-  border: none !important;
-  box-shadow: 0 6px 20px rgba(45, 40, 32, 0.14) !important;
-  border-radius: 12px !important;
-  overflow: hidden;
-}
-
-.leaflet-bar a {
-  width: 34px !important;
-  height: 34px !important;
-  line-height: 34px !important;
-  background: rgba(255, 253, 249, 0.96) !important;
-  color: var(--color-ink) !important;
-  border-bottom: 1px solid var(--color-line) !important;
-}
-
-.leaflet-bar a:hover {
-  background: var(--color-paper-deep) !important;
-}
-
-.leaflet-bar a:last-child {
-  border-bottom: none !important;
-}
-
-.custom-marker-pin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  box-shadow: 0 4px 14px rgba(45, 40, 32, 0.22);
-  cursor: pointer;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.custom-marker-pin:hover {
-  transform: scale(1.12) translateY(-2px);
-}
-
-.leaflet-popup-content-wrapper {
-  border-radius: 18px !important;
-  padding: 4px !important;
-  box-shadow: 0 18px 44px rgba(45, 40, 32, 0.16) !important;
-  border: 1px solid var(--color-line) !important;
-}
-
-.leaflet-popup-content {
-  margin: 12px 14px !important;
-  line-height: 1.5 !important;
-}
-
-.leaflet-popup-tip {
-  box-shadow: 0 4px 10px rgba(45, 40, 32, 0.08) !important;
-}
-
-/* ============================================================
-   Scrollbars discrètes
-   ============================================================ */
+/* Custom scrollbars - Light Atelier Edition */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.04);
 }
 ::-webkit-scrollbar-thumb {
-  background: #d9d2c4;
-  border: 2px solid transparent;
-  background-clip: content-box;
-  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #bdb5a5;
-  background-clip: content-box;
+  background: rgba(0, 0, 0, 0.32);
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/* Leaflet container base */
+.leaflet-container {
+  background-color: #F5F3ED !important;
+  font-family: var(--font-sans) !important;
 }
 
-/* ============================================================
-   Micro-animations (substituent tailwindcss-animate absent)
-   ============================================================ */
-@keyframes odyssee-enter {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* High-end Light Map Filters for OpenStreetMap */
+.aura-map-regal-light {
+  filter: contrast(98%) brightness(101%) sepia(8%) hue-rotate(5deg);
 }
 
-@keyframes odyssee-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.aura-map-riviera-light {
+  filter: contrast(100%) brightness(102%) saturate(110%) hue-rotate(185deg);
 }
 
-@keyframes odyssee-spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
+.aura-map-toscane-light {
+  filter: contrast(102%) brightness(99%) sepia(24%) saturate(115%) hue-rotate(-12deg);
 }
 
-@keyframes odyssee-soft-pulse {
-  0%,
+.aura-map-kyoto-light {
+  filter: contrast(96%) brightness(102%) saturate(92%) hue-rotate(45deg);
+}
+
+.aura-map-sahara-light {
+  filter: contrast(104%) brightness(100%) sepia(20%) saturate(130%) hue-rotate(8deg);
+}
+
+/* Custom Light Popup Styling */
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #1e1b2e !important;
+  backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.15), 0 8px 16px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.98) !important;
+}
+
+.custom-pulse-marker {
+  animation: pulse-ring-light 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring-light {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(160, 139, 98, 0.6);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 14px rgba(160, 139, 98, 0);
+  }
   100% {
-    box-shadow: 0 0 0 0 rgba(180, 84, 47, 0.35);
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(160, 139, 98, 0);
   }
-  50% {
-    box-shadow: 0 0 0 8px rgba(180, 84, 47, 0);
-  }
-}
-
-.animate-in {
-  animation: odyssee-enter 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-}
-
-.fade-in {
-  animation-name: odyssee-fade;
-}
-
-.animate-spin-slow {
-  animation: odyssee-spin-slow 18s linear infinite;
-}
-
-.animate-soft-pulse {
-  animation: odyssee-soft-pulse 2.6s ease-in-out infinite;
-}
-
-/* ============================================================
-   Curseur d'enveloppe budget (0 → 100 000 €)
-   ============================================================ */
-input[type='range'].budget-range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--color-ink) 0%,
-    var(--color-ink) var(--fill, 0%),
-    var(--color-paper-deep) var(--fill, 0%),
-    var(--color-paper-deep) 100%
-  );
-  outline: none;
-  cursor: pointer;
-}
-
-input[type='range'].budget-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 22px;
-  width: 22px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--color-ink);
-  box-shadow: 0 2px 8px rgba(29, 27, 22, 0.22);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-input[type='range'].budget-range::-webkit-slider-thumb:hover {
-  transform: scale(1.08);
-}
-
-input[type='range'].budget-range::-moz-range-thumb {
-  height: 22px;
-  width: 22px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--color-ink);
-  box-shadow: 0 2px 8px rgba(29, 27, 22, 0.22);
-}
-
-input[type='range'].budget-range:focus-visible {
-  box-shadow: 0 0 0 4px rgba(180, 84, 47, 0.18);
-}
-
-/* Carte affichée en fond de page : purement décorative */
-.map-backdrop,
-.map-backdrop * {
-  pointer-events: none !important;
-}
-
-.map-backdrop .leaflet-control-container {
-  display: none;
-}
-
-.map-backdrop .leaflet-tile-pane {
-  filter: grayscale(0.35) saturate(0.75) contrast(0.95);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ============================================================
-   Mode confort — un thème simple et lisible pour tous les âges
-   (activé depuis le bouton « Confort » de l'en-tête)
-   ============================================================ */
-html[data-font-scale='large'] {
-  font-size: 17px;
-}
-
-html[data-font-scale='xlarge'] {
-  font-size: 19.5px;
-}
-
-html[data-contrast='high'] {
-  --color-paper: #ffffff;
-  --color-paper-deep: #f4f4f4;
-  --color-ink: #0b0a08;
-  --color-ink-soft: #1b1915;
-  --color-muted: #3a362f;
-  --color-line: #b7b0a2;
-  --color-line-strong: #837c6f;
-  --color-accent: #94401f;
-  --color-accent-soft: #fdeee6;
-}
-
-html[data-contrast='high'] body {
-  background-color: #ffffff;
-}
-
-html[data-contrast='high'] .text-muted {
-  color: #3a362f !important;
-}
-
-html[data-contrast='high'] .bg-paper {
-  background-color: #f6f5f3 !important;
-}
-
-html[data-contrast='high'] .border-line {
-  border-color: #b7b0a2 !important;
-}
-
-html[data-contrast='high'] .shadow-xs,
-html[data-contrast='high'] .shadow-2xs,
-html[data-contrast='high'] .shadow-sm {
-  box-shadow: 0 1px 0 rgba(11, 10, 8, 0.14) !important;
-}
-
-html[data-motion='reduced'] *,
-html[data-motion='reduced'] *::before,
-html[data-motion='reduced'] *::after {
-  animation-duration: 0.001ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.001ms !important;
-  scroll-behavior: auto !important;
-}
-
-html[data-targets='large'] button,
-html[data-targets='large'] a[href],
-html[data-targets='large'] input,
-html[data-targets='large'] select,
-html[data-targets='large'] [role='switch'] {
-  min-height: 44px;
-}
-
-html[data-targets='large'] button[aria-label] {
-  min-width: 44px;
-}
-
-html[data-links='underlined'] a[href] {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-html[data-contrast='high'] :focus-visible {
-  outline: 3px solid #0b0a08;
-  outline-offset: 3px;
 }

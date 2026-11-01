@@ -1,6 +1,6 @@
 {
-  "name": "Odyssée - Planificateur de Voyage & Assistant Carte",
-  "description": "Planificateur de voyage tout-en-un avec carte interactive, chatbot géolocalisé avec grounding en temps réel et résolution intelligente des conflits d'horaires.",
-  "requestFramePermissions": [],
+  "name": "Aura Voyage - Planificateur d'Itinéraire Vivant",
+  "description": "Atelier de voyage intelligent nouvelle génération avec timeline interactive synchronisée, carte dynamique en direct, résolution instantanée de conflits et concierge IA.",
+  "requestFramePermissions": ["geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

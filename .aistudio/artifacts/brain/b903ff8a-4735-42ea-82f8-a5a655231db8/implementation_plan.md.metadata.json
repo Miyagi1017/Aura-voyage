@@ -1,0 +1,6 @@
+{
+  "summary":  "Plan d'implémentation pour le créateur de trajet personnalisé Aura Voyage :\n- Carte interactive masquée par défaut avec déploiement fluide en coin flottant interactif au clic sur un lieu\n- Carrousel direct en première page trié par proximité pour les activités de journée et de soirée (dîner, bars lounge, nocturne)\n- Calcul automatique des trajets multi-modes (à pied et en voiture) avec distances et durées entre étapes\n- Système d'annulation rapide (Undo) pour restaurer instantanément un glisser-déposer sur la timeline",
+  "updatedAt":  "2026-10-31T13:22:00.198107561Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

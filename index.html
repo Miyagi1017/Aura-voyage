@@ -1,37 +1,18 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
-    <script>
-      // Ignore WebSocket/HMR disconnect errors in iframe preview per environment instructions
-      window.addEventListener('error', function(e) {
-        if (e && (
-          (e.message && (e.message.includes('WebSocket') || e.message.includes('@vite/client') || e.message.includes('createWebSocketModuleRunnerTransport'))) ||
-          (e.filename && e.filename.includes('@vite/client'))
-        )) {
-          e.stopImmediatePropagation();
-          e.preventDefault();
-        }
-      });
-      window.addEventListener('unhandledrejection', function(e) {
-        if (e && e.reason && (String(e.reason).includes('WebSocket') || String(e.reason).includes('createWebSocketModuleRunnerTransport'))) {
-          e.stopImmediatePropagation();
-          e.preventDefault();
-        }
-      });
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voyage</title>
-    <meta name="description" content="Planificateur de voyage tout-en-un avec carte interactive, chatbot géolocalisé avec grounding en temps réel et résolution intelligente des conflits d'horaires." />
-    <meta property="og:title" content="Voyage" />
-    <meta property="og:description" content="Planificateur de voyage tout-en-un avec carte interactive, chatbot géolocalisé avec grounding en temps réel et résolution intelligente des conflits d'horaires." />
+    <title>Aura Voyage - Planificateur d'Itinéraire Vivant</title>
+    <meta name="description" content="Atelier de voyage intelligent nouvelle génération avec timeline interactive synchronisée, carte dynamique en direct, résolution instantanée de conflits et concierge IA." />
+    <meta property="og:title" content="Aura Voyage - Planificateur d'Itinéraire Vivant" />
+    <meta property="og:description" content="Atelier de voyage intelligent nouvelle génération avec timeline interactive synchronisée, carte dynamique en direct, résolution instantanée de conflits et concierge IA." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <meta name="theme-color" content="#faf7f1" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231D1B16'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23FCD34D' stroke-width='2.2'/%3E%3Cpath d='M19 13l-1.8 4.2L13 19l1.8-4.2z' fill='%23FCD34D'/%3E%3C/svg%3E" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   </head>
   <body>
     <div id="root"></div>
