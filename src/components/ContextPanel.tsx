@@ -5,12 +5,10 @@ import { BudgetPlanner } from './BudgetPlanner';
 interface ContextPanelProps {
   trip: Trip;
   currentDay: number;
-  onOptimizeTrip: () => void;
   onAddStep: () => void;
   onOpenChat: () => void;
   onOpenRestrictions: () => void;
   onBudgetChange: (value: number) => void;
-  hasConflict: boolean;
   totalCost: number;
   userName?: string;
   profileStyle?: string;
@@ -23,12 +21,10 @@ interface ContextPanelProps {
 export const ContextPanel: React.FC<ContextPanelProps> = ({
   trip,
   currentDay,
-  onOptimizeTrip,
   onAddStep,
   onOpenChat,
   onOpenRestrictions,
   onBudgetChange,
-  hasConflict,
   totalCost,
   userName,
   profileStyle,
@@ -94,19 +90,8 @@ export const ContextPanel: React.FC<ContextPanelProps> = ({
         profileStyle={profileStyle}
       />
 
-      {/* Actions */}
+      {/* Action */}
       <div className="space-y-2">
-        <button
-          onClick={onOptimizeTrip}
-          className={`w-full rounded-xl px-4 py-3 text-[13px] font-semibold transition-colors ${
-            hasConflict
-              ? 'bg-amber-500 text-white hover:bg-amber-600'
-              : 'bg-ink text-white hover:bg-ink-soft'
-          }`}
-        >
-          {hasConflict ? 'Résoudre les conflits' : "Optimiser l'itinéraire"}
-        </button>
-
         <button
           onClick={onAddStep}
           className="w-full rounded-xl border border-line bg-white px-4 py-3 text-[13px] font-semibold text-ink transition-colors hover:border-line-strong hover:bg-paper"

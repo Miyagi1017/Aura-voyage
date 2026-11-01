@@ -12,6 +12,7 @@ import { activityMatchesInterests } from '../data/interests';
 import { formatDistance, haversineKm } from '../data/geo';
 import { compareTime, timeToMinutes } from '../data/time';
 import { getLocalCurrency, localEquivalent } from '../data/currency';
+import { gemKind, gemLabel } from '../data/gems';
 import { SafeImage } from './SafeImage';
 import { ActivityTimeModal } from './ActivityTimeModal';
 import { TimeField } from './TimeField';
@@ -67,6 +68,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<ActivityCategory | 'Tous'>('Tous');
   const [maxBudget, setMaxBudget] = useState<number | null>(null);
   const [onlyInterests, setOnlyInterests] = useState(false);
+  const [onlyGems, setOnlyGems] = useState(false);
   const [validatedCount, setValidatedCount] = useState<number | null>(null);
   const [isDestinationOpen, setIsDestinationOpen] = useState(false);
   const [distanceKm, setDistanceKm] = useState<number | null>(null);
@@ -77,7 +79,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
   useEffect(() => {
     setValidatedCount(null);
-  }, [selectedCategory, maxBudget, onlyInterests, searchQuery, distanceKm, timeFilter]);
+  }, [selectedCategory, maxBudget, onlyInterests, onlyGems, searchQuery, distanceKm, timeFilter]);
 
   const matchesTimeRange = (time: string) => {
     if (!timeFilter) return true;
@@ -122,6 +124,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       item.address.toLowerCase().includes(search) ||
       item.description?.toLowerCase().includes(search);
     const matchesBudget = maxBudget === null || item.price <= maxBudget;
+    const matchesGem = !onlyGems || gemKind(item) !== null;
     const matchesInterests =
       !onlyInterests || interests.length === 0 || activityMatchesInterests(item, interests);
     const itemDistance = distanceTo(item);
@@ -132,6 +135,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
       matchesCategory &&
       matchesSearch &&
       matchesBudget &&
+      matchesGem &&
       matchesInterests &&
       matchesDistance &&
       matchesTime
@@ -273,7 +277,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
         </div>
 
         {/* Catégories */}
-        <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           {categories.map((cat) => (
             <button
               key={cat.label}
@@ -293,7 +297,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             onClick={() => setOnlyInterests((prev) => !prev)}
             aria-pressed={onlyInterests}
             title="Filtrer selon les centres d'intérêt du profil"
-            className={`ml-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors ${
+            className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors ${
               onlyInterests
                 ? 'border-rose-300 bg-rose-50 text-rose-800'
                 : 'border-line bg-white text-muted hover:border-line-strong hover:text-ink'
@@ -305,6 +309,20 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 {interests.length}
               </span>
             )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setOnlyGems((prev) => !prev)}
+            aria-pressed={onlyGems}
+            title="Spots photo, tables locales, sorties et adresses hors des sentiers battus"
+            className={`shrink-0 whitespace-nowrap rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors ${
+              onlyGems
+                ? 'border-accent bg-accent-soft text-accent'
+                : 'border-line bg-white text-muted hover:text-ink'
+            }`}
+          >
+            {onlyGems ? 'Pépites ✓' : 'Pépites'}
           </button>
 
           <button
@@ -501,11 +519,13 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             <div className="col-span-full rounded-2xl border border-dashed border-line bg-white px-5 py-10 text-center">
               <p className="text-sm font-semibold text-ink">Aucune adresse ne correspond</p>
               <p className="mt-1 text-xs text-muted">
-                Essayez sans le filtre « Mes envies » ou élargissez votre recherche.
+                Essayez sans les filtres « Mes envies » ou « Pépites », ou élargissez votre
+                recherche.
               </p>
               <button
                 onClick={() => {
                   setOnlyInterests(false);
+                  setOnlyGems(false);
                   setSelectedCategory('Tous');
                   setMaxBudget(null);
                   setSearchQuery('');
@@ -519,6 +539,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
           {chronological.map((item, index) => {
             const isAdded = addedActivityIds.includes(item.id);
+            const gem = gemKind(item);
             const nextItem = chronological[index + 1];
             return (
               <article
@@ -539,6 +560,12 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   </span>
 
                   <div className="absolute right-3 top-3 flex items-center gap-1.5">
+                    {gem && (
+                      <span className="rounded-full bg-white/90 px-2 py-1 text-[10px] font-semibold text-accent shadow-xs backdrop-blur-sm">
+                        {gemLabel(gem)}
+                      </span>
+                    )}
+
                     {item.rating && (
                       <span className="rounded-full bg-white/90 px-2 py-1 text-[11px] font-semibold text-ink shadow-xs backdrop-blur-sm">
                         {item.rating} / 5

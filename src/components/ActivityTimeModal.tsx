@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Clock, MapPin, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Activity } from '../types/travel';
 import { TimeField } from './TimeField';
 import { normalizeTime } from '../data/time';
@@ -27,8 +27,8 @@ export const ActivityTimeModal: React.FC<ActivityTimeModalProps> = ({
   const [time, setTime] = useState(activity?.time ?? '18:00');
 
   useEffect(() => {
-    if (isOpen && activity) setTime(activity.time);
-  }, [isOpen, activity]);
+    if (isOpen && activity) setTime(slot?.start ?? activity.time);
+  }, [isOpen, activity, slot]);
 
   if (!isOpen || !activity) return null;
 
@@ -38,21 +38,16 @@ export const ActivityTimeModal: React.FC<ActivityTimeModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/45 p-0 backdrop-blur-xs animate-in fade-in duration-200 sm:items-center sm:p-4">
       <div className="w-full max-w-md overflow-hidden rounded-t-3xl border border-line bg-white shadow-2xl sm:rounded-[26px]">
         <div className="flex items-start justify-between gap-3 border-b border-line p-5">
-          <div className="flex items-start gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-ink text-amber-300">
-              <Clock className="h-5 w-5" />
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
+              Ajouter au séjour
             </span>
-            <div>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent">
-                Ajouter au séjour
-              </span>
-              <h3 className="font-serif text-xl font-semibold leading-tight text-ink">
-                À quelle heure ?
-              </h3>
-              <p className="mt-0.5 text-[11px] text-muted">
-                Choisissez librement l'heure de cette activité.
-              </p>
-            </div>
+            <h3 className="font-serif text-xl font-semibold leading-tight text-ink">
+              À quelle heure ?
+            </h3>
+            <p className="mt-0.5 text-[11px] text-muted">
+              Choisissez librement l'heure de cette activité.
+            </p>
           </div>
           <button
             onClick={onClose}
@@ -66,10 +61,7 @@ export const ActivityTimeModal: React.FC<ActivityTimeModalProps> = ({
         <div className="p-5">
           <div className="rounded-2xl border border-line bg-paper p-3">
             <p className="text-sm font-semibold text-ink">{activity.name}</p>
-            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted">
-              <MapPin className="h-3 w-3" />
-              <span className="truncate">{activity.address}</span>
-            </p>
+            <p className="mt-0.5 truncate text-[11px] text-muted">{activity.address}</p>
             {slotLabel && (
               <p className="mt-1 text-[10px] font-medium text-accent">
                 Tranche choisie dans Explorer : {slotLabel}
@@ -77,8 +69,7 @@ export const ActivityTimeModal: React.FC<ActivityTimeModalProps> = ({
             )}
           </div>
 
-          <label className="mt-4 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted">
-            <Clock className="h-3.5 w-3.5" />
+          <label className="mt-4 block text-[10px] font-semibold uppercase tracking-wider text-muted">
             Heure souhaitée
           </label>
           <TimeField
@@ -90,8 +81,8 @@ export const ActivityTimeModal: React.FC<ActivityTimeModalProps> = ({
             className="mt-1.5"
           />
           <p className="mt-1 text-[10px] text-muted">
-            Aucune limite : saisissez l'heure librement, de 00:00 à 29:59 (24:00 et au-delà =
-            après minuit).
+            Aucune limite : de 00:00 à 29:59 (24:00 et au-delà = après minuit). L'étape se place
+            dans l'ordre et les trajets du jour sont recalculés.
           </p>
         </div>
 
@@ -110,9 +101,8 @@ export const ActivityTimeModal: React.FC<ActivityTimeModalProps> = ({
               if (!normalized) return;
               onConfirm(normalized);
             }}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-ink-soft"
+            className="inline-flex cursor-pointer items-center rounded-full bg-ink px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-ink-soft"
           >
-            <Check className="h-3.5 w-3.5" />
             Ajouter à {time || '--:--'}
           </button>
         </div>

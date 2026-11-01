@@ -90,6 +90,7 @@ import { getCityFestivals, getCityTraditions } from './data/local-traditions';
 import { getCityRestrictions } from './data/local-restrictions';
 import { getActivityBudget, formatEuros } from './data/activity-budget';
 import { recalculateStepsRoute } from './data/route';
+import { optimizeDayRoute } from './data/optimize-route';
 import { guidedTourProvider, guidedTourReference } from './data/guided-tours';
 import { compareTime, normalizeTime } from './data/time';
 import { ComfortSettings, DEFAULT_COMFORT, applyComfort, readComfort, writeComfort } from './data/accessibility';
@@ -833,18 +834,34 @@ export default function App() {
     triggerSuccessBanner();
   };
 
-  // One-click AI optimization ("Bouton WOW")
+  // Optimise le trajet du jour : permute les étapes flexibles pour réduire
+  // les temps de trajet, tout en gardant les horaires réservés.
   const handleOptimizeTrip = () => {
-    if (!hasConflict) {
-      triggerSuccessBanner();
+    const daySteps = trip.steps[currentDay] || [];
+    const fixedIds = reservations
+      .filter((reservation) => reservation.status === 'confirmée')
+      .map((reservation) => reservation.activityId);
+
+    const result = optimizeDayRoute(daySteps, fixedIds);
+
+    if (result.movedSteps === 0) {
+      setGlobalNotice(
+        'Trajet déjà optimal : aucun détour à supprimer sans toucher aux réservations, repas et sorties.'
+      );
       return;
     }
-    const conflictStep = currentSteps.find((s) => !!s.conflict);
-    if (conflictStep?.conflict?.solutions?.[2]) {
-      handleApplySolution(conflictStep.conflict.solutions[2]);
-    } else if (conflictStep?.conflict?.solutions?.[0]) {
-      handleApplySolution(conflictStep.conflict.solutions[0]);
-    }
+
+    setTrip((prev) => ({
+      ...prev,
+      steps: { ...prev.steps, [currentDay]: result.steps },
+    }));
+
+    const moved = `${result.movedSteps} étape${result.movedSteps > 1 ? 's' : ''}`;
+    setGlobalNotice(
+      result.savedMinutes > 0
+        ? `${moved} réordonnée${result.movedSteps > 1 ? 's' : ''} · ${result.savedMinutes} min de trajet économisées. Réservations, repas et sorties conservés.`
+        : `${moved} réordonnée${result.movedSteps > 1 ? 's' : ''} · trajets recalculés. Réservations, repas et sorties conservés.`
+    );
   };
 
   const triggerSuccessBanner = () => {
@@ -1677,17 +1694,6 @@ export default function App() {
 
                   <div className="flex flex-wrap items-center gap-2">
                     <button
-                      onClick={handleOptimizeTrip}
-                      className={`cursor-pointer rounded-full px-4 py-2 text-[12px] font-semibold ${
-                        hasConflict
-                          ? 'bg-amber-500 text-white hover:bg-amber-600'
-                          : 'bg-ink text-white hover:bg-ink-soft'
-                      }`}
-                    >
-                      {hasConflict ? 'Résoudre' : 'Optimiser'}
-                    </button>
-
-                    <button
                       onClick={() => {
                         setScheduleDay(currentDay);
                         setIsScheduleOpen(true);
@@ -1835,7 +1841,7 @@ export default function App() {
             {/* --- Timeline + panneau de contexte --- */}
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start">
               <section className="lg:col-span-7 xl:col-span-8">
-                <div className="mb-4 flex items-baseline justify-between gap-3 px-1">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-1">
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                       Programme du jour
@@ -1845,13 +1851,23 @@ export default function App() {
                     </h2>
                   </div>
 
-                  <span
-                    className={`shrink-0 text-[11px] font-semibold ${
-                      hasConflict ? 'text-amber-700' : 'text-muted'
-                    }`}
-                  >
-                    {hasConflict ? '1 conflit à régler' : 'Journée fluide'}
-                  </span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span
+                      className={`shrink-0 text-[11px] font-semibold ${
+                        hasConflict ? 'text-amber-700' : 'text-muted'
+                      }`}
+                    >
+                      {hasConflict ? '1 conflit à régler' : 'Journée fluide'}
+                    </span>
+
+                    <button
+                      onClick={handleOptimizeTrip}
+                      title="Réordonner les étapes pour réduire le temps de trajet (réservations, repas et sorties conservés)"
+                      className="cursor-pointer rounded-full bg-ink px-4 py-2 text-[12px] font-semibold text-white transition-colors hover:bg-ink-soft"
+                    >
+                      Optimiser le trajet
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-0">
@@ -1904,12 +1920,10 @@ export default function App() {
                 <ContextPanel
                   trip={trip}
                   currentDay={currentDay}
-                  onOptimizeTrip={handleOptimizeTrip}
                   onAddStep={handleOpenAddStep}
                   onOpenChat={() => setIsChatOpen(true)}
                   onOpenRestrictions={() => setActiveTab('restrictions')}
                   onBudgetChange={handleBudgetChange}
-                  hasConflict={hasConflict}
                   totalCost={totalCost}
                   userName={user.name}
                   profileStyle={user.travelStyle}
